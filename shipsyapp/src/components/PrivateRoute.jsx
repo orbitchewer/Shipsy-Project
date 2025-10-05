@@ -6,8 +6,7 @@ export default function PrivateRoute({ children, allowedRole }) {
   const [auth, setAuth] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/verify", { withCredentials: true })
+axios.get(`${import.meta.env.VITE_API_URL}/verify`, { withCredentials: true })
       .then((res) => {
         if (res.data.Status && res.data.role === allowedRole) {
           setAuth(true);

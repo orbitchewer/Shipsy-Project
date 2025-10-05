@@ -162,7 +162,7 @@ export default function Profile() {
 
   const fetchManagerDetails = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/auth/manager/${manager_id}`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/manager/${manager_id}`);
       if (res.data.Status) setManager(res.data.Result);
     } catch (err) {
       console.error("Error fetching manager details:", err);
@@ -171,7 +171,7 @@ export default function Profile() {
 
   const fetchManagerCouriers = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/courier/manager/${manager_id}`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/courier/manager/${manager_id}`);
       if (res.data.Status) setCouriers(res.data.Result);
     } catch (err) {
       console.error("Error fetching couriers:", err);

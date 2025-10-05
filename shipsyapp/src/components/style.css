@@ -1,52 +1,15 @@
-.loginPage{
-    background: url('images/3607424.jpg');
-    background: linear-gradient(rgba(11, 11, 11, 0.5), rgba(10, 10, 10, 0.5)), url("images/3607424.jpg");
+.loginPage {
+    background: url('images/images10.jpeg');
+    background: linear-gradient(rgba(11, 11, 11, 0.5), rgba(10, 10, 10, 0.5)), url("images/images10.jpeg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: 100% 120%;
 }
 
 .loginForm {
+    background-color: rgba(1, 32, 93, 0.6);
     color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    
 }
-
-.inputGrp{
-    position: relative;
-    border-bottom: 2px solid #fff;
-    margin-bottom: 3rem;
-}
-
-.form-control{
-    background: none;
-    border: none;   
-    outline: none;
-    padding-block: .7rem; 
-    padding-left: 2rem;
-    font-size: 1rem;
-    font-weight: 500;
-}
-
-.imputGrp label{
-    position: absolute;
-    top: 0;
-    left: 2.5rem;
-    color: #fff;
-    font-weight: 500;
-    transition: .3s;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-  }
-  
-  .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
-  }
-  
 
 ul li :hover {
     background-color: gray;
@@ -62,8 +25,4 @@ ul li :hover {
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    
-    
 }
-
-

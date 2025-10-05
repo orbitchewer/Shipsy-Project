@@ -1,143 +1,112 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const EditEmployee = () => {
-    const {id} = useParams()
-    const [employee, setEmployee] = useState({
-        name: "",
-        email: "",
-        salary: "",
-        address: "",
-        category_id: "",
-      });
-      const [category, setCategory] = useState([])
-      const navigate = useNavigate()
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-      useEffect(()=> {
-        axios.get('http://localhost:3000/auth/category')
-        .then(result => {
-            if(result.data.Status) {
-                setCategory(result.data.Result);
-            } else {
-                alert(result.data.Error)
-            }
-        }).catch(err => console.log(err))
+  const [employee, setEmployee] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    pincode: ""
+  });
 
-        axios.get('http://localhost:3000/auth/employee/'+id)
-        .then(result => {
-            setEmployee({
-                ...employee,
-                name: result.data.Result[0].name,
-                email: result.data.Result[0].email,
-                address: result.data.Result[0].address,
-                salary: result.data.Result[0].salary,
-                category_id: result.data.Result[0].category_id,
-            })
-        }).catch(err => console.log(err))
-    }, [])
+  useEffect(() => {
+axios.get(`${import.meta.env.VITE_API_URL}/employee/detail/` + id)
+      .then((result) => {
+        if (result.data.Status) {
+          setEmployee(result.data.Result);
+        } else {
+          alert(result.data.Error);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [id]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        axios.put('http://localhost:3000/auth/edit_employee/'+id, employee)
-        .then(result => {
-            if(result.data.Status) {
-                navigate('/dashboard/employee')
-            } else {
-                alert(result.data.Error)
-            }
-        }).catch(err => console.log(err))
-    }
-    
+  const handleChange = (e) => {
+    setEmployee({ ...employee, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+axios.put(`${import.meta.env.VITE_API_URL}/employee/edit/` + id, employee)
+      .then((result) => {
+        if (result.data.Status) {
+          alert("Employee updated successfully!");
+          navigate("/dashboard/employee");
+        } else {
+          alert(result.data.Error);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
-    <div className="d-flex justify-content-center align-items-center mt-3">
-      <div className="p-3 rounded w-50 border">
-        <h3 className="text-center">Edit Employee</h3>
-        <form className="row g-1" onSubmit={handleSubmit}>
-          <div className="col-12">
-            <label for="inputName" className="form-label">
-              Name
-            </label>
+    <div className="d-flex justify-content-center align-items-center mt-4">
+      <div className="p-4 rounded w-50 border">
+        <h3 className="text-center mb-3">Edit Employee</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label">Name</label>
             <input
               type="text"
-              className="form-control rounded-0"
-              id="inputName"
-              placeholder="Enter Name"
+              name="name"
               value={employee.name}
-              onChange={(e) =>
-                setEmployee({ ...employee, name: e.target.value })
-              }
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Enter employee name"
+              required
             />
           </div>
-          <div className="col-12">
-            <label for="inputEmail4" className="form-label">
-              Email
-            </label>
+
+          <div className="mb-3">
+            <label className="form-label">Email</label>
             <input
               type="email"
-              className="form-control rounded-0"
-              id="inputEmail4"
-              placeholder="Enter Email"
-              autoComplete="off"
+              name="email"
               value={employee.email}
-              onChange={(e) =>
-                setEmployee({ ...employee, email: e.target.value })
-              }
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Enter email"
+              required
             />
           </div>
-          <div className='col-12'>
-            <label for="inputSalary" className="form-label">
-              Salary
-            </label>
+
+          <div className="mb-3">
+            <label className="form-label">Phone</label>
             <input
               type="text"
-              className="form-control rounded-0"
-              id="inputSalary"
-              placeholder="Enter Salary"
-              autoComplete="off"
-              value={employee.salary}
-              onChange={(e) =>
-                setEmployee({ ...employee, salary: e.target.value })
-              }
+              name="phone"
+              value={employee.phone}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Enter phone number"
             />
           </div>
-          <div className="col-12">
-            <label for="inputAddress" className="form-label">
-              Address
-            </label>
+
+          <div className="mb-3">
+            <label className="form-label">Pincode</label>
             <input
               type="text"
-              className="form-control rounded-0"
-              id="inputAddress"
-              placeholder="1234 Main St"
-              autoComplete="off"
-              value={employee.address}
-              onChange={(e) =>
-                setEmployee({ ...employee, address: e.target.value })
-              }
+              name="pincode"
+              value={employee.pincode}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Enter pincode"
+              required
             />
           </div>
-          <div className="col-12">
-            <label for="category" className="form-label">
-              Category
-            </label>
-            <select name="category" id="category" className="form-select"
-                onChange={(e) => setEmployee({...employee, category_id: e.target.value})}>
-              {category.map((c) => {
-                return <option value={c.id}>{c.name}</option>;
-              })}
-            </select>
-          </div>
-          
-          <div className="col-12">
-            <button type="submit" className="btn btn-primary w-100">
-              Edit Employee
-            </button>
-          </div>
+
+          <button type="submit" className="btn btn-primary w-100">
+            Update Employee
+          </button>
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EditEmployee
+export default EditEmployee;
