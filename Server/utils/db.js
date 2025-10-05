@@ -1,18 +1,17 @@
-import mysql from 'mysql'
+import mysql from 'mysql2';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "employeems"
-})
+// The mysql2 library can directly use the DATABASE_URL from your .env file
+const con = mysql.createConnection(process.env.MYSQL_PUBLIC_URL);
 
-con.connect(function(err) {
-    if(err) {
-        console.log("connection error")
-    } else {
-        console.log("Connected")
-    }
-})
+con.connect((err) => {
+  if (err) {
+    console.error('Connection to Railway MySQL failed:', err.stack);
+  } else {
+    console.log('Successfully connected to Railway MySQL database!');
+  }
+});
 
-export default con
+
+export default con;
