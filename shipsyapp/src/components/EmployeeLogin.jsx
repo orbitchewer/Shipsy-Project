@@ -128,7 +128,7 @@ const EmployeeLogin = () => {
 
         <div className="text-center mt-4">
           <p className="text-secondary mb-0" style={{ fontSize: "0.85rem" }}>
-            Need help? <a href="#" className="text-info text-decoration-none">Contact Support</a>
+            Need help? <a href="/contact_admin" className="text-info text-decoration-none">Contact Admin</a>
           </p>
         </div>
       </motion.div>

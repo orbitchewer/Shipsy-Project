@@ -1,50 +1,98 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeDetail = () => {
-    const [employee, setEmployee] = useState([])
-    const {id} = useParams()
-    const navigate = useNavigate()
+  const [employees, setEmployees] = useState([]);
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        axios.get('http://localhost:3000/employee/detail/'+id)
-        .then(result => {
-            setEmployee(result.data[0])
-        })
-        .catch(err => console.log(err))
-    }, [])
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/employee/")
+      .then((result) => {
+        if (result.data.Status) {
+          setEmployees(result.data.Result);
+        } else {
+          alert(result.data.Error);
+        }
+      })
+      .catch((err) => console.error("Error fetching employees:", err));
+  }, []);
 
+  const handleLogout = () => {
+    axios
+      .get("http://localhost:3000/employee/logout")
+      .then((result) => {
+        if (result.data.Status) {
+          localStorage.removeItem("valid");
+          navigate("/");
+        }
+      })
+      .catch((err) => console.error("Logout error:", err));
+  };
 
-    const handleLogout = () => {
-        axios.get('http://localhost:3000/employee/logout')
-        .then(result => {
-          if(result.data.Status) {
-            localStorage.setItem("valid", true)
-            navigate('/')
-          }
-        }).catch(err => console.log(err))
-      }
-    return (
-      <div>
-          <div className="p-2 d-flex justify-content-center shadow">
-              <h4>Emoployee Management System</h4>
-          </div>
-          <div className='d-flex justify-content-center flex-column align-items-center mt-3'>
-              <img src={`http://localhost:3000/Images/`+employee.image} className='emp_det_image'/>
-              <div className='d-flex align-items-center flex-column mt-5'>
-                  <h3>Name: {employee.name}</h3>
-                  <h3>Email: {employee.email}</h3>
-                  <h3>Salary: ${employee.salary}</h3>
-              </div>
-              <div>
-                  <button className='btn btn-primary me-2'>Edit</button>
-                  <button className='btn btn-danger' onClick={handleLogout}>Logout</button>
-              </div>
-          </div>
+  const filteredEmployees = employees.filter(
+    (emp) =>
+      emp.name.toLowerCase().includes(search.toLowerCase()) ||
+      emp.email.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div>
+      {/* Header */}
+      <div className="p-3 shadow d-flex justify-content-between align-items-center bg-dark text-white">
+        <h4 className="m-0">Employee Management System</h4>
+        <button className="btn btn-outline-light btn-sm" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
-    )
-  }
-  
-  export default EmployeeDetail
+
+      {/* Search Bar */}
+      <div className="container mt-4">
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h3>All Employees</h3>
+          <input
+            type="text"
+            placeholder="Search by name or email"
+            className="form-control w-25"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        {/* Employee Table */}
+        {filteredEmployees.length === 0 ? (
+          <p>No employees found.</p>
+        ) : (
+          <div className="table-responsive shadow-sm rounded">
+            <table className="table table-striped table-hover align-middle">
+              <thead className="table-dark">
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Pincode</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredEmployees.map((emp) => (
+                  <tr key={emp.employee_id}>
+                    <td>{emp.employee_id}</td>
+                    <td>{emp.name}</td>
+                    <td>{emp.email}</td>
+                    <td>{emp.phone}</td>
+                    <td>{emp.pincode}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default EmployeeDetail;
